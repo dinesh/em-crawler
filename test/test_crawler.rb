@@ -1,7 +1,8 @@
 require 'helper'
 
 class TestCrawler < Test::Unit::TestCase
-  should "probably rename this file and start testing for real" do
-    flunk "hey buddy, you should probably rename this file and start testing for real"
+  should "test the configuration" do
+    connection = Models::Url.connection
+    connection.active?.should eql(true)
   end
 end

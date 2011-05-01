@@ -1,0 +1,25 @@
+
+
+
+core:
+    seed_file: seed.txt
+    
+fetcher:
+    wait: 1
+    rate-limit: 50
+    timeout: 200
+    redirect_limit: 5
+    retries: 10
+
+frontier:
+    qmax_size: 10000
+    algorithm: BreathFirst
+
+
+database:
+    development:
+        adapter: em_mysql2
+        database: crawler_dev
+        username: root
+        password:
+        pool: 5

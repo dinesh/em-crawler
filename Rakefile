@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'bundler'
+require 'migration'
+
 begin
   Bundler.setup(:default, :development)
 rescue Bundler::BundlerError => e
@@ -11,19 +13,15 @@ require 'rake'
 
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "crawler"
-  gem.homepage = "http://github.com/dinesh/crawler"
+  gem.name = "em-crawler"
+  gem.homepage = "http://github.com/dinesh/em-crawler"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{ A evented ruby based cralwer which supports focused and topical crawling of web. }
+  gem.description = %Q{ A evented ruby based cralwer which supports focused and topical crawling of web. }
   gem.email = "dinesh@crypsis.net"
-  gem.authors = ["Dinesh"]
-  # Include your dependencies below. Runtime dependencies are required when using your gem,
-  # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
-  #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
-  #  gem.add_development_dependency 'rspec', '> 1.2.3'
+  gem.authors = ["Dinesh Yadav"]  
 end
+
 Jeweler::RubygemsDotOrgTasks.new
 
 require 'rake/testtask'
@@ -50,4 +48,18 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title = "crawler #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+require 'active_record'
+require 'yaml'
+
+
+desc "Migrate the database through scripts in db/migrate. Target specific version with VERSION=x"
+task :migrate => :environment do
+  ActiveRecord::Migrator.migrate('db/migrate', ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+end
+
+task :environment do
+  ActiveRecord::Base.establish_connection(YAML::load(File.open('database.yml')))
+  ActiveRecord::Base.logger = Logger.new(File.open('database.log', 'a'))
 end

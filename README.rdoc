@@ -1,4 +1,8 @@
-= crawler
+= em-crawler
+
+== for web scrapping:
+	-- http://purifyr.com/api/ or boilerplate java lib
+	
 
 Description goes here.
 
