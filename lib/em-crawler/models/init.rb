@@ -13,6 +13,8 @@ ActiveRecord::Base.time_zone_aware_attributes = true
 
 module Models
   class Base < ActiveRecord::Base
+    include EMCrawler
+    self.abstract_class = true
     establish_connection EMCrawler.config.database
   end  
 end

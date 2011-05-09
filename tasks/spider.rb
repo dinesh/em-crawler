@@ -28,6 +28,7 @@ class OnShotSpider
             conn.callback{ |http| EM.next_tick{ extract_links(url, http.response) } }
             conn.errback{ self.fail('Error reterving ' + url) }
       }
+      Frontier.add(@urls)
       @urls.each{|seed| EM.next_tick{ handle.call(seed) } }
     rescue Exception => e
       puts e.message

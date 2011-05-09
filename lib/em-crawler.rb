@@ -13,6 +13,7 @@ $:.unshift File.dirname(__FILE__)
 end
 
 require 'config'
+require 'util'
 
 module EMCrawler
 

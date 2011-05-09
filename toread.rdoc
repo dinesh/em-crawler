@@ -1,0 +1,14 @@
+
+
+for async-dns resolver
+    https://gist.github.com/663299
+    https://github.com/tarcieri/cool.io/blob/master/lib/cool.io/dns_resolver.rb
+    https://github.com/astro/em-dns
+    
+simple search engine:
+    http://final555.googlecode.com/svn
+
+
+for boilerplating
+	- https://github.com/jiminoc/goose/wiki
+	

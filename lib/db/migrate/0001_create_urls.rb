@@ -8,6 +8,9 @@ class CreateUrls < ActiveRecord::Migration
         t.integer :port, :default  => 80
         t.string :query
         t.string :fragement
+        t.string :code, :unique => true 
+        t.integer :outgoing_links, :default => 0
+        t.integer :incoming_links, :default => 0
       end
       
     end
