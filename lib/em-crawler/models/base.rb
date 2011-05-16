@@ -1,4 +1,4 @@
-
+# https://github.com/mikewadhera/relational/blob/master/test.rb
 
 require 'active_record'
 require 'mysql2'
@@ -7,7 +7,7 @@ require 'logger'
 
 ActiveRecord::Base.default_timezone = :utc
 ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.logger.level = Logger::INFO
+ActiveRecord::Base.logger.level = Logger::DEBUG
 ActiveRecord::Base.pluralize_table_names = true
 ActiveRecord::Base.time_zone_aware_attributes = true
 

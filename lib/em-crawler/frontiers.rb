@@ -1,35 +1,25 @@
-
+require 'forwardable'
+require 'active_support/core_ext/array'
 
 module EMCrawler
   module Frontiers
-    include BreathFirst
-    include Mercator
-    
     class << self
-      attr_accessor :algorithm , :options
-      DEFAULT_OPTIONS =  { :algorithm => :breath_first, :max_size => 1000000 }
+      extend Forwardable
+      attr_accessor :runner , :options
+      DEFAULT_OPTIONS = { :runner => 'Basic' }
+      def_delegators :@runner, :add, :get, :size, :shuffle
       
-      def config options, &block
-        @options = DEFAULT_OPTIONS.update(options)
-        yield 
+      def setup opts = {}
+        @options ||= DEFAULT_OPTIONS.merge(opts)
+        runner opts
       end
       
-      def algorithm
-        @algorithm ||= @options[:algorithm].camelize.new 
-      end
-      
-      def add urls, opts ={}
-        @algorithm.add(url, opts)
-      end
-      
-      def next size = 1, opts = {}
-        @algorithm.add(url, opts)
-      end
-      
-      def shuffle
-        @algorithm.shuffle
+      def runner opts = {} 
+        @runner ||= Basic.new
+        # @runner ||= @options[:runner].camelize.constantize.new opts
       end
       
     end
   end
 end
+

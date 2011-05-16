@@ -38,6 +38,9 @@ namespace :db do
   task :environment do
     DATABASE_ENV = ENV['DATABASE_ENV'] || 'development'
     MIGRATIONS_DIR = ENV['MIGRATIONS_DIR'] || 'lib/db/migrate'
+    $LOAD_PATH.unshift( File.join(File.dirname(__FILE__),  'lib'))
+    require 'em-crawler'
+    
   end
 
   task :configuration => :environment do
@@ -57,6 +60,13 @@ namespace :db do
   desc 'Drops the database for the current DATABASE_ENV'
   task :drop => :configure_connection do
     ActiveRecord::Base.connection.drop_database @config['database']
+  end
+  
+  desc 'Load the seed data from db/seeds.rb'
+  task :seed => :environment do
+      seed_file = File.expand_path File.join(MIGRATIONS_DIR, '..', 'seed.rb')
+      puts seed_file
+      load(seed_file) if File.exist?(seed_file)
   end
 
   desc 'Migrate the database (options: VERSION=x, VERBOSE=false).'

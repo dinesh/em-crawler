@@ -3,7 +3,8 @@
 
 core:
     seed_file: seed.txt
-    
+    http_cache: html
+     
 fetcher:
     wait: 1
     rate-limit: 50
@@ -23,3 +24,4 @@ database:
         username: root
         password:
         pool: 5
+        reconnect: true

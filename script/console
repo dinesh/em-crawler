@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby 
+
 require 'rubygems'
 require 'bundler'
 begin
@@ -8,12 +10,12 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
-require 'test/unit'
-require 'shoulda'
+require 'irb'
+require 'irb/completion'
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$LOAD_PATH.unshift(File.dirname(__FILE__))
+path = File.expand_path File.join( File.dirname(__FILE__), '..', 'lib')
+puts " Starting console ..."
+$:.unshift path
 require 'em-crawler'
 
-class Test::Unit::TestCase
-end
+IRB.start

@@ -6,9 +6,11 @@ gem 'em-http-request'
 gem 'nokogiri'
 gem 'addressable'
 gem 'rainbow'
+gem 'awesome_print'
 
 gem 'mysql2', '0.2.7'
 gem 'activerecord'
+gem 'pismo'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

@@ -1,9 +1,15 @@
+require 'digest/md5'
 
 module EMCrawler
   module Util
     CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')
     BASE = 62
-
+    
+    def digest value
+      Digest::MD5.hexdigest value
+    end
+    module_function :digest
+    
     def encode(value)
         s = []
         while value >= BASE

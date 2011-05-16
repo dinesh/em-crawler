@@ -20,5 +20,9 @@ module EMCrawler
     @configuration['database']['development']
    end
    
+   def http_cache_directory
+      File.join File.dirname(__FILE__), '..', @configuration['core']['http_cache']
+   end
+   
   end
 end
