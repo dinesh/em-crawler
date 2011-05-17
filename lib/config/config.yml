@@ -3,7 +3,7 @@
 
 core:
     seed_file: seed.txt
-    http_cache: html
+    http_cache: tmp/html
      
 fetcher:
     wait: 1
@@ -11,11 +11,12 @@ fetcher:
     timeout: 200
     redirect_limit: 5
     retries: 10
-
-frontier:
+frontiers:
     qmax_size: 10000
     algorithm: BreathFirst
+    dump_path: offline/frontiers.yaml
 
+    
 
 database:
     development:

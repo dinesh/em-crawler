@@ -10,6 +10,10 @@ module EMCrawler
     end
     module_function :digest
     
+    def parse uri
+      
+    end
+    
     def encode(value)
         s = []
         while value >= BASE

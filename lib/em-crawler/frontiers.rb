@@ -7,7 +7,7 @@ module EMCrawler
       extend Forwardable
       attr_accessor :runner , :options
       DEFAULT_OPTIONS = { :runner => 'Basic' }
-      def_delegators :@runner, :add, :get, :size, :shuffle
+      def_delegators :@runner, :add, :get, :size, :shuffle, :stop
       
       def setup opts = {}
         @options ||= DEFAULT_OPTIONS.merge(opts)
@@ -16,7 +16,6 @@ module EMCrawler
       
       def runner opts = {} 
         @runner ||= Basic.new
-        # @runner ||= @options[:runner].camelize.constantize.new opts
       end
       
     end

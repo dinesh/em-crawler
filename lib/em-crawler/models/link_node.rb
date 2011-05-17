@@ -7,7 +7,7 @@ module Models
     validate :same_vertex?
     
     def same_vertex?
-      self.class.where(:destination_id => self.destination_id, :source_id => self.source_id).none?   
+      errors.add(:destionation, 'cannot add duplicate node with same destionation') if self.class.where(:destination_id => self.destination_id, :source_id => self.source_id).none?   
     end
     
   end

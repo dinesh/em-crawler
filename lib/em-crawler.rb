@@ -7,6 +7,11 @@ require 'active_support'
 
 require 'em-synchrony'
 require 'em-synchrony/em-http'
+require 'em-synchrony/iterator'
+
+
+require 'em-crawler/patch'
+
 
 module Models
   autoload :Base, 'em-crawler/models/base'
@@ -36,6 +41,10 @@ module EMCrawler
     def config
       @config ||= Config.new
     end 
+    
+    def root
+      config.root
+    end
     
   end
   

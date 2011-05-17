@@ -8,23 +8,31 @@ module Models
     has_many :outgoings, :through => :link_nodes, :source => :destination
     DAMPING_FACTOR = 0.9
     validate :same_url?
+    ACCEPTED_SCHEMES = [ 'http', 'ftp', 'git', 'https', 'ssh' ]
+    validates_presence_of :scheme, :in => ACCEPTED_SCHEMES
+    validates_presence_of :host
+    validates_presence_of :uri
+    validates_presence_of :code
     
     def frontier_rank
+      t = Time.now
       unless new_record?
+        puts "***** Calculating the pagerank.. "
         d = DAMPING_FACTOR
         page_rank = (1-d) + d * outgoings.map{|out| out.page_rank/( out.outgoings.count || 0.99 ) }.sum
         total = ( ic = incomings.count ) + ( pr = page_rank )
         update_attribute(:page_rank , rank = (ic*0.2 + 0.8*pr)/total )
         rank
+        ap "**** Finished pagerank iteration : #{Timw.now - t} seconds.. "
       else
         1
       end 
     end
       
     def add_outgoing auri
+      out = nil
       begin
-        ap "Fiber #{Fiber.current} for #{auri.to_s}"
-        out = self.class.find_by_code( Util.digest(auri.to_s) )
+        out = self.class.where(:code =>  Util.digest(auri.to_s) ).first
         out = out ? out : self.class.init_from_address(auri)
         out.save if out.new_record?
         self.link_nodes << LinkNode.new(:destination => out) unless self.outgoing_ids.include?(out.id)
@@ -33,7 +41,7 @@ module Models
         raise e
         ap e.backtrace
       end
-      
+      out
     end
     
     def self.init_from_address auri
@@ -50,7 +58,7 @@ module Models
       when String
         where(:code =>  Util.digest(uri) ).first
       when Addressable::URI
-        where( :code =>  Util.digest(uri.uri) ).first
+        where( :code =>  Util.digest(uri.to_s) ).first
       when Url
         uri
       end
@@ -59,8 +67,7 @@ module Models
     private
     
     def same_url?
-      self.code ||= Util.digest(self.uri)
-      errors.add(:uri, "already registed the #{self.uri}.") if self.uri and self.class.find_by_code(self.code)
+       self.code ||= Util.digest(self.uri)
     end
     
     
