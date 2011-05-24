@@ -1,6 +1,40 @@
 
 module EMCrawler
   module Frontiers
+    module Prioritizer
+      def score uri
+        scheme_rank(uri.scheme) + path_rank(uri.path) + extension_rank( File.extname(uri.path) )
+      end
+      
+      def scheme_rank scheme
+        case scheme
+        when 'http'; 10
+        when 'https'; -1
+        when 'ftp'; -1
+        when 'mailto'; -1
+        when 'javascript'; -1
+        else; -1
+        end 
+      end
+      
+      def path_rank path
+        imp = path.grep /(about|home|news|About|Home)/i  ? 5 : 0
+        imp += path.grep(/download/i) ? -2 : 0
+        imp += path.grep(/cgi/i) ? -1 : 0
+       end
+       
+       def extname ext
+         case ext
+         when '.html', '.htm', '.php', '.rss', ""
+           5
+         when '.jsp', '.asp' , '.aspx'
+           3
+         when '.css', '.jpg', '.pdf', '.xml', '.cgi'; -1
+         else; -1
+         end
+       end
+    end
+    
     class Basic
       attr_accessor :queue, :options, :min, :max
       

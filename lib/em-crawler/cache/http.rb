@@ -25,16 +25,17 @@ module EMCrawler
           puts ">>>> Getting file #{key} (#{url}) from cache"
           return IO.read( cached_path )
         else
-          puts ">>>>> Getting file #{key} from URL #{url}"
+            puts ">>>>> Getting file #{key} from URL #{url}"
+            
             connection =  ( connections[url.authority] ||= { :handle => EventMachine::HttpRequest.new(url.origin), 
-                                                             :ips => nil, :hit_at => Time.now } )
             ap connections.map{|k, v| [k, v[:ips] ] }
             EM::DnsResolver.resolve(url.authority).callback{|a| connection[:ips] = a } unless connection[:ips] 
+            
             t = ( diff = Time.now - connection[:hit_at] ) > WAIT ? WAIT : diff
             puts ">>>>> Sleeping for #{t} sec to retry #{url.to_s}"
+            
             EM.add_timer(t) {
               http = connection[:handle].aget opts.merge!( { :path => url.path, :query => url.query, :keepalive => true } )
-          
               cachr = lambda{|cached_path, data| 
                   File.open( cached_path, 'w' ) do |f|
                     f.puts data
