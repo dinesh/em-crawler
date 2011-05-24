@@ -1,6 +1,7 @@
 source "http://rubygems.org"
 
 gem 'eventmachine'
+gem 'em-dns'
 gem 'em-synchrony'
 gem 'em-http-request'
 gem 'nokogiri'
@@ -10,7 +11,6 @@ gem 'awesome_print'
 
 gem 'mysql2', '0.2.7'
 gem 'activerecord'
-gem 'pismo'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

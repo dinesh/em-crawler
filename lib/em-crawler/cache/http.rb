@@ -15,7 +15,7 @@ module EMCrawler
       def connections; @connections ||= { };  end
       
       def shutdown
-        connections.each{|conn| conn[:handle].close if conn }
+        connections.each{|_, conn| conn[:handle].disconnect if conn }
       end
       
       def get( url, key, opts = { } )
@@ -26,19 +26,21 @@ module EMCrawler
           return IO.read( cached_path )
         else
           puts ">>>>> Getting file #{key} from URL #{url}"
-          connection =  ( connections[url.authority] ||= { :handle => EventMachine::HttpRequest.new(url.origin), :hit_at => Time.now } )
-          ap connections.keys
-          t = ( diff = Time.now - connection[:hit_at] ) > WAIT ? WAIT : diff
-          puts ">>>>> Sleeping for #{t} sec to retry #{url.to_s}"
-          EM.add_timer(t) {
-            http = connection[:handle].aget opts.merge!( { :path => url.path, :query => url.query, :keepalive => true } )
+            connection =  ( connections[url.authority] ||= { :handle => EventMachine::HttpRequest.new(url.origin), 
+                                                             :ips => nil, :hit_at => Time.now } )
+            ap connections.map{|k, v| [k, v[:ips] ] }
+            EM::DnsResolver.resolve(url.authority).callback{|a| connection[:ips] = a } unless connection[:ips] 
+            t = ( diff = Time.now - connection[:hit_at] ) > WAIT ? WAIT : diff
+            puts ">>>>> Sleeping for #{t} sec to retry #{url.to_s}"
+            EM.add_timer(t) {
+              http = connection[:handle].aget opts.merge!( { :path => url.path, :query => url.query, :keepalive => true } )
           
-            cachr = lambda{|cached_path, data| 
-                File.open( cached_path, 'w' ) do |f|
-                  f.puts data
-                end
-            }
-          
+              cachr = lambda{|cached_path, data| 
+                  File.open( cached_path, 'w' ) do |f|
+                    f.puts data
+                  end
+              }
+            
             http.callback { 
                 data = http.response;
                 cachr.call(cached_path, data)

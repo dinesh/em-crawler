@@ -46,10 +46,14 @@ class OnShotSpider
     ap "fiber => #{f = Fiber.current} => #{f.alive?}.."
     looper = lambda { 
       EMCrawler::Frontiers.get(20).each do |seed|
-        EMCrawler::Fetcher.get(seed){|url, response| extract_links(url, response) }
+        EMCrawler::Fetcher.get(seed){|url, response, report| 
+          extract_links(url, response) 
+          url.metadata.after_crawl report # F1
+        }
       end
     }
-    looper.call
+    looper.call #I1, set global env
+    
   end
   
   def extract_links url, body
@@ -62,8 +66,9 @@ class OnShotSpider
       outgoing_links = (doc/'a[href]').map{|u| anchor_handle.call(u['href']) }.compact.uniq
       puts     "\t--> Got #{outgoing_links.size} links"
       outgoing_links.map!{ |u| url.add_outgoing(u) }
+      url.save
       size = EMCrawler::Frontiers.add(outgoing_links)
-      green "Frontier size => #{size}..."
+      green "Frontier size => #{size}...\n\n"
   end
   
   def stop

@@ -28,14 +28,15 @@ module Models
         1
       end 
     end
-      
+    
+    
     def add_outgoing auri
       out = nil
       begin
         out = self.class.where(:code =>  Util.digest(auri.to_s) ).first
         out = out ? out : self.class.init_from_address(auri)
         out.save if out.new_record?
-        self.link_nodes << LinkNode.new(:destination => out) unless self.outgoing_ids.include?(out.id)
+        self.link_nodes.build(:destination_id => out.id, :source_id => self.id) if out.id.present? and !self.outgoing_ids.include?(out.id) 
         out
       rescue Exception => e
         raise e

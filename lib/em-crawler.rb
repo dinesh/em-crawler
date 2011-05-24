@@ -5,6 +5,7 @@ require 'nokogiri'
 require 'rainbow'
 require 'active_support'
 
+require 'em/dns_resolver'
 require 'em-synchrony'
 require 'em-synchrony/em-http'
 require 'em-synchrony/iterator'
@@ -17,6 +18,10 @@ module Models
   autoload :Base, 'em-crawler/models/base'
   autoload :Url, 'em-crawler/models/url'
   autoload :LinkNode, 'em-crawler/models/link_node'
+end
+
+module DS
+  autoload :MetaHash, 'em-crawler/ds/meta_hash'
 end
 
 module EMCrawler

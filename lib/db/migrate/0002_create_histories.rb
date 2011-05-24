@@ -8,6 +8,7 @@ class CreateHistories < ActiveRecord::Migration
       t.integer :fetch_interval
       t.datetime :fetched_at
       t.datetime :last_modified
+      t.text :stat
       t.string :signature, :unique => true
       t.string :content_type
       t.string :content_encoding
@@ -20,6 +21,7 @@ class CreateHistories < ActiveRecord::Migration
     
     add_index :metadatas, :url_id
     add_index :metadatas, :signature
+    
   end
     
   def self.down
